@@ -30,6 +30,7 @@ server <- function(input, output, session) {
   # Assignment: Add logic so that when the "save" button
   # is pressed, the data is saved to a CSV file called
   # "data.csv" in the current directory.
+  observeEvent(input$save, write.csv(df(), "data.csv"))
 }
 
 shinyApp(ui, server)

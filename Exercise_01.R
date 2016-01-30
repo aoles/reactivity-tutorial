@@ -18,12 +18,14 @@ server <- function(input, output, session) {
   # that the code isn't duplicated and the operation isn't
   # performed twice for each change to input$nrows.
   
+  data = reactive(head(cars, input$nrows))
+  
   output$plot <- renderPlot({
-    plot(head(cars, input$nrows))
+    plot(data())
   })
   
   output$table <- renderTable({
-    head(cars, input$nrows)
+    data()
   })
 }
 

@@ -24,24 +24,24 @@ ui <- fillPage(
 server <- function(input, output, session) {
   # Either NULL, or a 1-row data frame that represents
   # the point that the user clicked on the plot
-  userPoint <- reactive({
-    # input$click will be either NULL or list(x=num, y=num)
+  
+  values = reactiveValues(x = NULL, y = cars)
+  
+  observeEvent(input$click, {
     click <- input$click
-    
-    if (is.null(click)) {
-      # The user didn't click on the plot (or the previous
-      # click was cleared by the plot being re-rendered)
-      return(NULL)
-    }
-    
-    data.frame(speed = click$x, dist = click$y)
+    values$x = data.frame(speed = click$x, dist = click$y)
+  })
+  
+  observeEvent(values$x, {
+    values$y = rbind(values$y, values$x)
   })
   
   output$plot <- renderPlot({
     # Before plotting, combine the original dataset with
     # the user data. (rbind ignores NULL args.)
-    df <- rbind(cars, userPoint())
-    plot(df, pch = 19)
+    df <- values$y
+    rbind(cars, values$y)
+    plot(values$y, pch = 19)
     
     model <- lm(dist ~ speed, df)
     abline(model)

@@ -18,8 +18,16 @@ server <- function(input, output, session) {
   # show a new batch of rnorm(100). When "runif" button is clicked,
   # the plot should show a new batch of runif(100).
   
+  values = reactiveValues(x = NULL)
+  
+  observeEvent(input$rnorm, { values$x <- rnorm(100) })
+  
+  observeEvent(input$runif, { values$x <- runif(100) })
+  
   output$plot <- renderPlot({
-    hist(rnorm(100))
+    req(values$x)
+    #if (is.null(values$x)) return()
+    hist(values$x)
   })
 }
 

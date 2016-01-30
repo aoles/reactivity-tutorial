@@ -15,6 +15,9 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   # Assignment: Plot the first input$nrows columns of a
   # data frame of your choosing, using head() and plot()
+  output$plot = renderPlot(
+    plot(head(faithful, n = input$nrows))
+  )
 }
 
 shinyApp(ui, server)
